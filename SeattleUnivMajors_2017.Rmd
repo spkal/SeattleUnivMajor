@@ -1,0 +1,66 @@
+---
+title: "Seattle University Majors 2017"
+author: "Stephen Kaluzny"
+date: "June 11, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+A look at the number of students graduating by major in three schools at 
+Seattle University in 2017.
+
+## Data
+The data are extracted from the 2017 Seattle University Commencement program.
+The schools counted are: College of Arts and Sciences,
+School of Business and Economics and 
+College of Science and Engineering.
+
+```{r read_data}
+d <- readr::read_csv("arts_sci_majors_2017.csv")
+d$Major <- reorder(d$Major, d$N)
+```
+## All Majors
+```{r packages, echo=FALSE}
+suppressPackageStartupMessages(library("dplyr"))
+library("ggplot2")
+```
+
+```{r, fig.width=8, fig.height=8}
+d %>% ggplot(aes(x=Major, y=N)) +
+  geom_bar(stat="identity") +
+  coord_flip() +
+  ggtitle("Major Counts for All Three Schools")
+```
+## Looking at the Majors by Schools
+
+```{r, fig.width=8, fig.height=8}
+d %>%
+  filter(School == "ArtsAndSciences") %>%
+  ggplot(aes(x=reorder(Major, N), y=N)) +
+    geom_bar(stat="identity") +
+    xlab("Major") +
+    coord_flip() +
+    ggtitle("Major Counts forCollege of Arts and Sciences")
+```
+```{r, fig.width=8, fig.height=6}
+d %>%
+  filter(School == "ScienceAndEngineering") %>%
+  ggplot(aes(x=reorder(Major, N), y=N)) +
+    geom_bar(stat="identity", width=.5) +
+    xlab("Major") +
+    coord_flip() +
+    ggtitle("Major Counts for College of Science and Engineering")
+```
+
+```{r, fig.width=8, fig.height=6}
+d %>%
+  filter(School == "BusinessAndEconomics") %>%
+  ggplot(aes(x=reorder(Major, N), y=N)) +
+    geom_bar(stat="identity") +
+    xlab("Major") +
+    coord_flip() +
+    ggtitle("Major Counts for School of Business and Economics")
+```
